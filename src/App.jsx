@@ -11,7 +11,9 @@ export default function App() {
     stopSpeechToText,
   } = useSpeechToText({
     continuous: true,
-    useLegacyResults: false
+    useLegacyResults: false,
+    speechRecognitionProperties: {
+      lang: 'bn-BN',}
   });
 
   if (error) return <p>Web Speech API is not available in this browser 🤷‍</p>;
