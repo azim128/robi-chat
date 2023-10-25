@@ -5,14 +5,16 @@ import useToggler from "../hooks/useToggler";
 import { AiOutlineClose, AiTwotoneStop } from "react-icons/ai";
 import { MdKeyboardVoice } from "react-icons/md";
 import useSpeechToText from 'react-hook-speech-to-text';
+import useResponse from "../hooks/useResponse";
 
 const Chatbox = () => {
   const boxRef = useRef();
   const { toggle, handleChangeToggler } = useToggler();
+  const { getMsg, currentReceived, speechOpts,received } = useResponse();
   const [currentInput, setCurrentInput] = useState("");
   const [messages, setMessages] = useState([
     {
-      text: "হ্যালো! আমি হিয়া। আমি রবির ভার্চুয়াল এআই এসিস্ট্যান্ট। আমাকে রবির সেবা সম্বন্ধে যাবতীয় প্রশ্ন করতে পার।",
+      text: "হ্যালো! আমি হিয়া। আমি রবির ভার্চুয়াল এআই এসিস্ট্যান্ট। আমাকে রবির সেবা সম্বন্ধে যাবতীয় প্রশ্ন করতে পারেন।",
       type: 1,
       id: uuidv4(),
     },
@@ -29,14 +31,28 @@ const Chatbox = () => {
     continuous: true,
     useLegacyResults: false,
     speechRecognitionProperties: {
-      lang: 'bn-BN',
+      lang: speechOpts['language'],
     }
   });
 
   useEffect(() => {
+    
+    const l = received.length;
+    if (received[l - 1]) {
+      const rData = currentReceived?.map(item => ({ text: item, type: 1, id: uuidv4() }));
+
+      // setMessages([...messages, { text: received[l - 1], type: 1, id: uuidv4() }]);
+      setMessages([...messages, ...rData]);
+    }
+  }, [received.length]);
+  useEffect(() => {
+    if (toggle && boxRef.current) {
+      const objDiv = boxRef.current;
+      objDiv.scrollTop = objDiv.scrollHeight;
+    }
+  }, [messages.length]);
+  useEffect(() => {
     if (!isRecording) {
-      // Recording has stopped, you can handle it here
-      // In this example, we'll stop recording and submit the input
       stopSpeechToText();
       handleInput();
     }
@@ -49,10 +65,18 @@ const Chatbox = () => {
     }
   }, [results]);
 
-  const handleInput = () => {
+
+  const handleInput = (e) => {
+    if (e) {
+    e.preventDefault(); // Check if the event object exists before preventing default
+  }
     if (currentInput) {
-      setMessages([...messages, { text: currentInput, type: 0, id: uuidv4() }]);
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { text: currentInput, type: 0, id: uuidv4() },
+      ]);
       setCurrentInput("");
+      getMsg(currentInput);
     }
   };
 
@@ -66,6 +90,15 @@ const Chatbox = () => {
 
   const handleListenStop = () => {
     stopSpeechToText();
+    // Add the text from the speech recognition to messages
+    if (currentInput) {
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { text: currentInput, type: 0, id: uuidv4() },
+      ]);
+      setCurrentInput("");
+      getMsg(currentInput);
+    }
   };
 
   return (
@@ -93,7 +126,7 @@ const Chatbox = () => {
             })}
           </div>
           <div className={Styles.chatInputContainer}>
-            <form action="" onSubmit={(e) => e.preventDefault()} autoComplete="off">
+            <form onSubmit={handleInput} autoComplete="off">
               <input
                 type="text"
                 name="chatInput"

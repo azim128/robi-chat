@@ -175,3 +175,8 @@ cursor: pointer;}
   .theChatMsg {
     line-height: 2;
   }}
+
+  .rotateCenter {
+    -webkit-animation: rotate-center 4s cubic-bezier(0.550, 0.055, 0.675, 0.190) infinite reverse both;
+            animation: rotate-center 4s cubic-bezier(0.550, 0.055, 0.675, 0.190) infinite reverse both;
+  }

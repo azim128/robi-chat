@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const baseUrl = import.meta.env.API_BASE_URL
+const baseUrl = "http://18.136.177.139:5005"
 
 const Axios = axios.create({
   baseURL: baseUrl,

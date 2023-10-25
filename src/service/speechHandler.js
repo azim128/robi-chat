@@ -15,17 +15,7 @@ export const speak = (msg) => {
   }
 };
 
-export const stopTalking = async (e) => {
-  if (e) e.preventDefault();
 
-  if (responsiveVoice) {
-    responsiveVoice.cancel();
-  }
-
-  if (typeof window !== "undefined") {
-    ctx.close();
-  }
-};
 
 export const speakInEnglish = (text) => {
   const playback = (audio) => {
