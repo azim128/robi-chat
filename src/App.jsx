@@ -1,5 +1,6 @@
 import React from 'react';
 import useSpeechToText from 'react-hook-speech-to-text';
+import Chatbox from './components/chatbox';
 
 export default function App() {
   const {
@@ -21,6 +22,7 @@ export default function App() {
   return (
     <div>
       <h1>Recording: {isRecording.toString()}</h1>
+      <Chatbox/>
       <button onClick={isRecording ? stopSpeechToText : startSpeechToText}>
         {isRecording ? 'Stop Recording' : 'Start Recording'}
       </button>
