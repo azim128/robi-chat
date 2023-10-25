@@ -170,10 +170,10 @@ cursor: pointer;}
       max-width: 95%;
     }
   
-    .messageNow {
+    /* .messageNow {
       display: none;
     }
-  }
+  } */
   
   .theChatMsg {
     line-height: 2;
